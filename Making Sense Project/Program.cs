@@ -17,8 +17,13 @@ namespace Making_Sense_Project
             ReadWriteJson json = new ReadWriteJson();
             //var cars = carCRUD.Create();
             //json.SerializeJson(cars);
-            var datos = json.ReadJsonFile();
-            json.DesrealizedJson(datos);
+            //var datos = json.ReadJsonFile(); 
+            //json.DesrealizedJson(datos);
+            Console.WriteLine("Ingrese Id del auto que desea buscar");
+            int idCar = int.Parse(Console.ReadLine());
+            var resultado = carCRUD.GetCar(idCar);
+            Console.WriteLine(resultado);
+
             Console.ReadKey();
         }
     }

@@ -27,9 +27,11 @@ namespace Making_Sense_Project.Logic
             }
             return datosJson;
         }
-        public void DesrealizedJson(string datosJson)
+        public List<Car> DesrealizedJson(string datosJson)
         {
-            Console.WriteLine(datosJson);
+            List<Car> listCar = JsonConvert.DeserializeObject<List<Car>>(datosJson);
+
+            return listCar;
         }
     }
 }

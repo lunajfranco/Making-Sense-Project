@@ -24,5 +24,19 @@ namespace Making_Sense_Project.Logic
             };
             return car;
         }
+        public Car GetCar(int idCar)
+        {
+            ReadWriteJson json = new ReadWriteJson();
+            var datos = json.ReadJsonFile();
+            var listCar = json.DesrealizedJson(datos);
+            for (int i = 0; i < listCar.Count; i++)
+            {
+                if (listCar[i].IdCar == idCar)
+                {
+                    return listCar[i];
+                }
+            }
+            return null;
+        }
     }
 }

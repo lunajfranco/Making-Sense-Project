@@ -1,0 +1,15 @@
+[
+  {
+    "IdCar": 2,
+    "Marca": {
+      "IdMarca": 1,
+      "NombreMarca": "volskwagen",
+      "Cars": null
+    },
+    "Model": null,
+    "Color": "negro",
+    "Year": 2015,
+    "CantidadPuertas": 3,
+    "Transimision": "Manual"
+  }
+]

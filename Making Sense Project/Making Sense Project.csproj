@@ -37,6 +37,7 @@
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -48,8 +49,9 @@
   <ItemGroup>
     <Compile Include="Logic\CarCRUD.cs" />
     <Compile Include="Logic\ReadWriteJson.cs" />
+    <Compile Include="Model\Brand.cs" />
     <Compile Include="Model\Car.cs" />
-    <Compile Include="Model\Marca.cs" />
+    <Compile Include="Model\ICarCRUD.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

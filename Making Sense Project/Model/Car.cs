@@ -9,11 +9,11 @@ namespace Making_Sense_Project.Model
     public class Car
     {
         public int IdCar { get; set; }
-        public Marca Marca { get; set; }
+        public Brand Brand { get; set; }
         public string Model { get; set; }
         public string Color { get; set; }
         public int Year { get; set; }
-        public byte CantidadPuertas { get; set; }
-        public string Transimision { get; set; }
+        public byte NumbersDoor { get; set; }
+        public bool Transmission { get; set; }
     }
 }

@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Making_Sense_Project.Model
 {
-    public class Marca
+    interface ICarCRUD
     {
-        public int IdMarca { get; set; }
-        public string NombreMarca { get; set; }
-        public List<Car> Cars { get; set; }
+        List<Car> CreateCar(Car car);
+        Car GetCarByID(int idCar);
+        void UpdateCar(Car car);
+        void DeleteCarById(int idCar);
     }
 }

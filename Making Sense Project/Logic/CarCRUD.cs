@@ -7,36 +7,45 @@ using System.Threading.Tasks;
 
 namespace Making_Sense_Project.Logic
 {
-    public class CarCRUD
+    public class CarCRUD : ICarCRUD
     {
-        public List<Car> Create()
+        List<Car> ICarCRUD.CreateCar(Car car)
         {
-            List<Car> car = new List<Car> {
+            List<Car> cars = new List<Car> {
             new Car
                 {
                 IdCar = 2,
-                Marca = new Marca { IdMarca = 1, NombreMarca = "volskwagen" },
+                Brand = Brand.Volkswagen,
+                Model = "Gol",
                 Color = "negro",
                 Year = 2015,
-                CantidadPuertas = 3,
-                Transimision = "Manual"
+                NumbersDoor = 3,
+                Transmission = false
                 }
             };
-            return car;
+            return cars;
         }
-        public Car GetCar(int idCar)
+        public Car GetCarByID(int idCar)
         {
             ReadWriteJson json = new ReadWriteJson();
-            var datos = json.ReadJsonFile();
-            var listCar = json.DesrealizedJson(datos);
-            for (int i = 0; i < listCar.Count; i++)
-            {
-                if (listCar[i].IdCar == idCar)
-                {
-                    return listCar[i];
-                }
-            }
-            return null;
+            string datos = json.ReadJsonFile();
+            List<Car> listCar = json.DesrealizedJson(datos);
+
+            return listCar.SingleOrDefault(x => x.IdCar == idCar);
+        }
+        void ICarCRUD.UpdateCar(Car car)
+        {
+            ReadWriteJson json = new ReadWriteJson();
+            string datos = json.ReadJsonFile();
+            List<Car> listCar = json.DesrealizedJson(datos);
+            listCar.Remove(listCar.SingleOrDefault(x => x.IdCar == car.IdCar));
+            listCar.Add(car);
+            var serialize = json.SerializeJson(listCar);
+            json.WriteJsonFile(serialize);
+        }
+        public void DeleteCarById(int idCar)
+        {
+            throw new NotImplementedException();
         }
     }
 }

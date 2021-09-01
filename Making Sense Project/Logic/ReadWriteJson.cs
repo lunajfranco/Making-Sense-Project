@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,11 +12,14 @@ namespace Making_Sense_Project.Logic
 {
     public class ReadWriteJson
     {
-        private string _path = @"C:\Users\lunaj\source\repos\Making Sense Project\Making Sense Project\Data\CarJson.json";
+        private string _path = ConfigurationManager.AppSettings["_pathJson"];
 
-        public void SerializeJson(List<Car> cars)
+        public string SerializeJson(List<Car> cars)
         {
-            string CarJson = JsonConvert.SerializeObject(cars.ToArray(), Formatting.Indented);
+            return JsonConvert.SerializeObject(cars.ToArray(), Formatting.Indented);
+        }
+        public void WriteJsonFile(string CarJson)
+        {
             File.WriteAllText(_path, CarJson);
         }
         public string ReadJsonFile()

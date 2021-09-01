@@ -1,15 +1,11 @@
 [
   {
     "IdCar": 2,
-    "Marca": {
-      "IdMarca": 1,
-      "NombreMarca": "volskwagen",
-      "Cars": null
-    },
-    "Model": null,
+    "Brand": 5,
+    "Model": "Golf",
     "Color": "negro",
     "Year": 2015,
-    "CantidadPuertas": 3,
-    "Transimision": "Manual"
+    "NumbersDoor": 5,
+    "Transmission": false
   }
 ]

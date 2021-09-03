@@ -24,16 +24,16 @@ namespace Making_Sense_Project.Logic
         }
         public string ReadJsonFile()
         {
-            string datosJson;
+            string dataJson;
             using (var reader = new StreamReader(_path))
             {
-                datosJson = reader.ReadToEnd();
+                dataJson = reader.ReadToEnd();
             }
-            return datosJson;
+            return dataJson;
         }
-        public List<Car> DesrealizedJson(string datosJson)
+        public List<Car> DesrealizedJson(string dataJson)
         {
-            List<Car> listCar = JsonConvert.DeserializeObject<List<Car>>(datosJson);
+            List<Car> listCar = JsonConvert.DeserializeObject<List<Car>>(dataJson);
 
             return listCar;
         }

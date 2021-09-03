@@ -23,7 +23,8 @@ namespace Making_Sense_Project.Logic
             //incremento de idCar segun la cantidad de objetos en la lista
             if (listCar.Count > 0)
             {
-                id = listCar.Count + 1;
+                Car getId = listCar.LastOrDefault();
+                id = getId.IdCar + 1;
             }
             else
             {
@@ -31,12 +32,14 @@ namespace Making_Sense_Project.Logic
             }
             do
             {
+                //imprime el Enum en forma descendente
                 Console.WriteLine("Elija la Marca del auto que desea agregar");
                 foreach (var value in Enum.GetValues(typeof(Brand)))
                 {
                     Console.WriteLine("{0,3} {1}",
                         (int)value, (Brand)value);
                 }
+                //se convierte el enum en lista y se busca el enum que coincida con lo que busca el cliente
                 List<Brand> listEnum = Enum.GetValues(typeof(Brand)).Cast<Brand>().ToList();
                 int idMarca = int.Parse(Console.ReadLine());
                 if (idMarca <= 6 || idMarca == 0)
@@ -65,7 +68,7 @@ namespace Making_Sense_Project.Logic
             Console.WriteLine("Ingrese cantidad de puerdas del auto");
             byte doors = byte.Parse(Console.ReadLine());
             Console.WriteLine("Ingrese transmision M = Manual, A = Automatico");
-            string transmissionValue = Console.ReadLine();
+            string transmissionValue = Console.ReadLine().ToUpper();
             if (transmissionValue == "M")
             {
                 transmission = false;
@@ -73,6 +76,10 @@ namespace Making_Sense_Project.Logic
             else if (transmissionValue == "A")
             {
                 transmission = true;
+            }
+            else
+            {
+                Console.WriteLine("Valor no aceptado");
             }
             listCar.Add(new Car
             {
@@ -82,7 +89,7 @@ namespace Making_Sense_Project.Logic
                 Color = color,
                 Year = year,
                 NumbersDoor = doors,
-                Transmission = transmission
+                Automatic = transmission
             });
             var serialize = json.SerializeJson(listCar);
             json.WriteJsonFile(serialize);
@@ -124,7 +131,8 @@ namespace Making_Sense_Project.Logic
             //incremento de idCar segun la cantidad de objetos en la lista
             if (listCar.Count > 0)
             {
-                id = listCar.Count + 3;
+                Car getId = listCar.LastOrDefault();
+                id = getId.IdCar + 1;
             }
             else
             {
@@ -167,7 +175,7 @@ namespace Making_Sense_Project.Logic
             Console.WriteLine("Ingrese cantidad de puerdas del auto");
             byte doors = byte.Parse(Console.ReadLine());
             Console.WriteLine("Ingrese transmision M = Manual, A = Automatico");
-            string transmissionValue = Console.ReadLine();
+            string transmissionValue = Console.ReadLine().ToUpper();
             if (transmissionValue == "M")
             {
                 transmission = false;
@@ -175,6 +183,10 @@ namespace Making_Sense_Project.Logic
             else if (transmissionValue == "A")
             {
                 transmission = true;
+            }
+            else
+            {
+                Console.WriteLine("Valor no aceptado");
             }
             car = (new Car
             {
@@ -184,7 +196,7 @@ namespace Making_Sense_Project.Logic
                 Color = color,
                 Year = year,
                 NumbersDoor = doors,
-                Transmission = transmission
+                Automatic = transmission
             });
             listCar.Add(car);
             var serialize = json.SerializeJson(listCar);

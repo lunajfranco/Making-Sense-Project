@@ -6,7 +6,7 @@
     "Color": "azul",
     "Year": 2015,
     "NumbersDoor": 5,
-    "Transmission": false
+    "Automatic": false
   },
   {
     "IdCar": 4,
@@ -15,6 +15,6 @@
     "Color": "azul",
     "Year": 2021,
     "NumbersDoor": 5,
-    "Transmission": true
+    "Automatic": true
   }
 ]

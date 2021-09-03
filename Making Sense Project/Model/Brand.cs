@@ -8,11 +8,11 @@ namespace Making_Sense_Project.Model
 {
     public enum Brand
     {
-        Chevrolet,
-        Fiat,
-        Ford,
-        Peugeot,
-        Renault,
-        Volkswagen
+        Chevrolet = 0,
+        Fiat = 1,
+        Ford = 2,
+        Peugeot = 3,
+        Renault = 4,
+        Volkswagen = 5
     }
 }

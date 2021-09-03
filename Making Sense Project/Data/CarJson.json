@@ -1,11 +1,20 @@
 [
   {
     "IdCar": 2,
-    "Brand": 5,
-    "Model": "Golf",
-    "Color": "negro",
+    "Brand": 2,
+    "Model": "Mondeo",
+    "Color": "azul",
     "Year": 2015,
     "NumbersDoor": 5,
     "Transmission": false
+  },
+  {
+    "IdCar": 4,
+    "Brand": 5,
+    "Model": "Gol",
+    "Color": "azul",
+    "Year": 2021,
+    "NumbersDoor": 5,
+    "Transmission": true
   }
 ]

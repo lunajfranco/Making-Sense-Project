@@ -14,6 +14,6 @@ namespace Making_Sense_Project.Model
         public string Color { get; set; }
         public int Year { get; set; }
         public byte NumbersDoor { get; set; }
-        public bool Transmission { get; set; }
+        public bool Automatic { get; set; }
     }
 }

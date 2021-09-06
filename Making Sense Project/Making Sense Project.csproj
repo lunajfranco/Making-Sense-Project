@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Logic\CarCRUD.cs" />
+    <Compile Include="Logic\ConsoleMessage.cs" />
     <Compile Include="Logic\ReadWriteJson.cs" />
     <Compile Include="Logic\StartUp.cs" />
     <Compile Include="Model\Brand.cs" />

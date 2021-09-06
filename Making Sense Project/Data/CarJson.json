@@ -16,5 +16,23 @@
     "Year": 2021,
     "NumbersDoor": 5,
     "Automatic": true
+  },
+  {
+    "IdCar": 5,
+    "Brand": 5,
+    "Model": "Vento",
+    "Color": "gris",
+    "Year": 2017,
+    "NumbersDoor": 5,
+    "Automatic": true
+  },
+  {
+    "IdCar": 6,
+    "Brand": 4,
+    "Model": "Clio",
+    "Color": "Azul",
+    "Year": 2020,
+    "NumbersDoor": 3,
+    "Automatic": true
   }
 ]

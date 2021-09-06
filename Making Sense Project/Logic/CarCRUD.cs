@@ -13,98 +13,36 @@ namespace Making_Sense_Project.Logic
 
         void ICarCRUD.CreateCar(Car car)
         {
-            int id;
-            Brand brand = new Brand();
-            bool transmission = false;
-            bool nextStep = false;
             ReadWriteJson json = new ReadWriteJson();
-            string datos = json.ReadJsonFile();
-            List<Car> listCar = json.DesrealizedJson(datos);
-            //incremento de idCar segun la cantidad de objetos en la lista
-            if (listCar.Count > 0)
-            {
-                Car getId = listCar.LastOrDefault();
-                id = getId.IdCar + 1;
-            }
-            else
-            {
-                id = 1;
-            }
-            do
-            {
-                //imprime el Enum en forma descendente
-                Console.WriteLine("Elija la Marca del auto que desea agregar");
-                foreach (var value in Enum.GetValues(typeof(Brand)))
-                {
-                    Console.WriteLine("{0,3} {1}",
-                        (int)value, (Brand)value);
-                }
-                //se convierte el enum en lista y se busca el enum que coincida con lo que busca el cliente
-                List<Brand> listEnum = Enum.GetValues(typeof(Brand)).Cast<Brand>().ToList();
-                int idMarca = int.Parse(Console.ReadLine());
-                if (idMarca <= 6 || idMarca == 0)
-                {
-                    for (int i = 0; i < listEnum.Count; i++)
-                    {
-                        if (idMarca == listEnum.IndexOf((Brand)i))
-                        {
-                            brand = (Brand)Enum.Parse(typeof(Brand), idMarca.ToString());
-                            nextStep = true;
-                        }
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Valor no aceptado");
-                }
-            } while (!nextStep);
-
-            Console.WriteLine("Ingrese Modelo del Auto");
-            string model = Console.ReadLine();
-            Console.WriteLine("Ingrese Color del Auto ");
-            string color = Console.ReadLine();
-            Console.WriteLine("Ingrese año del auto");
-            int year = int.Parse(Console.ReadLine());
-            Console.WriteLine("Ingrese cantidad de puerdas del auto");
-            byte doors = byte.Parse(Console.ReadLine());
-            Console.WriteLine("Ingrese transmision M = Manual, A = Automatico");
-            string transmissionValue = Console.ReadLine().ToUpper();
-            if (transmissionValue == "M")
-            {
-                transmission = false;
-            }
-            else if (transmissionValue == "A")
-            {
-                transmission = true;
-            }
-            else
-            {
-                Console.WriteLine("Valor no aceptado");
-            }
-            listCar.Add(new Car
-            {
-                IdCar = id,
-                Brand = brand,
-                Model = model,
-                Color = color,
-                Year = year,
-                NumbersDoor = doors,
-                Automatic = transmission
-            });
-            var serialize = json.SerializeJson(listCar);
-            json.WriteJsonFile(serialize);
-            Console.WriteLine("Auto Creado con éxito");
             StartUp startUp = new StartUp();
+            ConsoleMessage consoleMessage = new ConsoleMessage();
+            //Se lee json para ver si tiene algo
+            string dataJson = json.ReadJsonFile();
+            //se asigna los datos del json a una lista
+            List<Car> listCar = json.DesrealizedJson(dataJson);
+            //llamamos a los mensajes que apareceran en consola para la entrada de datos
+            listCar = consoleMessage.CreateCarsMessage(listCar);
+            //Serializamos el json con los datos obtenidos
+            string serializedJson = json.SerializeJson(listCar);
+            //Se Escribe el json con los datos serializados
+            json.WriteJsonFile(serializedJson);
+            Console.WriteLine("Auto Creado con éxito");
+            //Se vuelve al menu principal
             startUp.StartApp();
         }
         public Car GetCarByID(int idCar)
         {
             ReadWriteJson json = new ReadWriteJson();
-            string datos = json.ReadJsonFile();
-            List<Car> listCar = json.DesrealizedJson(datos);
+            // Se lee json para ver si tiene algo
+            string dataJson = json.ReadJsonFile();
+            //se asigna los datos del json a una lista
+            List<Car> listCar = json.DesrealizedJson(dataJson);
+            //Se busca un auto en la lista con el id ingresado 
             Car car = listCar.SingleOrDefault(x => x.IdCar == idCar);
             if (car != null)
             {
+                //Se recibe el auto con el id y lo transformamos a un jsonObject
+                //para poder imprimir linea por linea con los valores encontrados
                 var jsonObject = JObject.FromObject(car);
                 foreach (var item in jsonObject)
                 {
@@ -113,6 +51,7 @@ namespace Making_Sense_Project.Logic
             }
             else
             {
+                Console.WriteLine("No se encontró ningún Auto con ese Id");
                 StartUp startUp = new StartUp();
                 startUp.StartApp();
             }
@@ -120,87 +59,25 @@ namespace Making_Sense_Project.Logic
         }
         void ICarCRUD.UpdateCar(Car car)
         {
-            int id;
-            Brand brand = new Brand();
-            bool transmission = false;
-            bool nextStep = false;
+            StartUp startUp = new StartUp();
+            ConsoleMessage consoleMessage = new ConsoleMessage();
             ReadWriteJson json = new ReadWriteJson();
-            string datos = json.ReadJsonFile();
-            List<Car> listCar = json.DesrealizedJson(datos);
+            // Se lee json para ver si tiene algo
+            string dataJson = json.ReadJsonFile();
+            //se asigna los datos del json a una lista
+            List<Car> listCar = json.DesrealizedJson(dataJson);
+            //borramos el auto que deseamos actualizar buscado por id
             listCar.Remove(listCar.SingleOrDefault(x => x.IdCar == car.IdCar));
-            //incremento de idCar segun la cantidad de objetos en la lista
-            if (listCar.Count > 0)
-            {
-                Car getId = listCar.LastOrDefault();
-                id = getId.IdCar + 1;
-            }
-            else
-            {
-                id = 1;
-            }
-            do
-            {
-                Console.WriteLine("Elija la Marca del auto que desea agregar");
-                foreach (var value in Enum.GetValues(typeof(Brand)))
-                {
-                    Console.WriteLine("{0,3} {1}",
-                        (int)value, (Brand)value);
-                }
-                List<Brand> listEnum = Enum.GetValues(typeof(Brand)).Cast<Brand>().ToList();
-                int idMarca = int.Parse(Console.ReadLine());
-                if (idMarca <= 6 || idMarca == 0)
-                {
-                    for (int i = 0; i < listEnum.Count; i++)
-                    {
-                        if (idMarca == listEnum.IndexOf((Brand)i))
-                        {
-                            brand = (Brand)Enum.Parse(typeof(Brand), idMarca.ToString());
-                            nextStep = true;
-                        }
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Valor no aceptado");
-                }
-            } while (!nextStep);
-            
-
-            Console.WriteLine("Ingrese Modelo del Auto");
-            string model = Console.ReadLine();
-            Console.WriteLine("Ingrese Color del Auto ");
-            string color = Console.ReadLine();
-            Console.WriteLine("Ingrese año del auto");
-            int year = int.Parse(Console.ReadLine());
-            Console.WriteLine("Ingrese cantidad de puerdas del auto");
-            byte doors = byte.Parse(Console.ReadLine());
-            Console.WriteLine("Ingrese transmision M = Manual, A = Automatico");
-            string transmissionValue = Console.ReadLine().ToUpper();
-            if (transmissionValue == "M")
-            {
-                transmission = false;
-            }
-            else if (transmissionValue == "A")
-            {
-                transmission = true;
-            }
-            else
-            {
-                Console.WriteLine("Valor no aceptado");
-            }
-            car = (new Car
-            {
-                IdCar = id,
-                Brand = brand,
-                Model = model,
-                Color = color,
-                Year = year,
-                NumbersDoor = doors,
-                Automatic = transmission
-            });
+            //llamamos a los mensajes de consola para que el cliente ingrese los valores actualizados
+            car = consoleMessage.UpdateCarsMessage(listCar);
+            //Se agregan los datos recibidos a la lista
             listCar.Add(car);
-            var serialize = json.SerializeJson(listCar);
+            //Serializamos el json con los datos obtenidos
+            string serialize = json.SerializeJson(listCar);
+            //Escribimos el json con los datos serializados
             json.WriteJsonFile(serialize);
+            //Se recibe el auto actualizado y lo transformamos a un jsonObject
+            //para poder imprimir linea por linea con los valores encontrados
             var jsonObject = JObject.FromObject(listCar.Last());
             foreach (var item in jsonObject)
             {
@@ -208,19 +85,25 @@ namespace Making_Sense_Project.Logic
                 Console.WriteLine($"{item.Key}: {item.Value}");
             }
             Console.WriteLine("Auto actualizado");
-            StartUp startUp = new StartUp();
+            //Se vuelve al menu principal
             startUp.StartApp();
         }
         public void DeleteCarById(int idCar)
         {
+            StartUp startUp = new StartUp();
             ReadWriteJson json = new ReadWriteJson();
-            string datos = json.ReadJsonFile();
-            List<Car> listCar = json.DesrealizedJson(datos);
+            // Se lee json para ver si tiene algo
+            string dataJson = json.ReadJsonFile();
+            //se asigna los datos del json a una lista
+            List<Car> listCar = json.DesrealizedJson(dataJson);
+            //borramos el auto que coincida con el id recibido
             listCar.Remove(listCar.SingleOrDefault(x => x.IdCar == idCar));
-            var serialize = json.SerializeJson(listCar);
+            //Serializamos el json con los datos obtenidos
+            string serialize = json.SerializeJson(listCar);
+            //Escribimos el json con los datos serializados
             json.WriteJsonFile(serialize);
             Console.WriteLine("Auto eliminado");
-            StartUp startUp = new StartUp();
+            //Se vuelve al menu principal
             startUp.StartApp();
         }
     }

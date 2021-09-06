@@ -19,14 +19,9 @@ namespace Making_Sense_Project.Logic
             bool nextStep = false;
             do
             {
-
-            
-            string message = "ingrese C para Crear, B para Buscar, U para Actualizar, D para eliminar auto o E para salir";
-            Console.WriteLine(message);
-            string accion = Console.ReadLine().ToUpper();
-            if (accion == "B" || accion == "U" || accion == "C" || accion == "D")
-            {
-                    
+                string message = "ingrese C para Crear, B para Buscar, U para Actualizar, D para eliminar auto o E para salir";
+                Console.WriteLine(message);
+                string accion = Console.ReadLine().ToUpper();
                 switch (accion)
                 {
                     case "C":
@@ -47,21 +42,18 @@ namespace Making_Sense_Project.Logic
                         carCRUD.UpdateCar(resultado);
                             nextStep = true;
                             break;
-                    default:
+                    case "D":
                         Console.WriteLine("Ingrese el Id del auto que desea eliminar");
                         idCar = int.Parse(Console.ReadLine());
                         carCRUD.DeleteCarById(idCar);
-                            nextStep = true;
-                            break;
-                }
-            }
-                else if (accion == "E")
-                {
-                    Environment.Exit(1);
-                }
-                else
-                {
-                    Console.WriteLine("Valor incorrecto");
+                        nextStep = true;
+                        break;
+                    case "E":
+                        Environment.Exit(1);
+                        break;
+                    default:
+                        Console.WriteLine("Valor incorrecto");
+                        break;
                 }
             } while (!nextStep);
         }

@@ -1,5 +1,5 @@
-﻿using Making_Sense_Project.Model;
-using Making_Sense_Project_API.Model.Repostory;
+﻿using Making_Sense_Project_API.Model.Class;
+using Making_Sense_Project_API.Model.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +10,8 @@ namespace Making_Sense_Project_API.Controllers
     [ApiController]
     public class CarController : ControllerBase
     {
-        ICarCRUD<Car> _carCRUD;
-        public CarController(ICarCRUD<Car> carCRUD)
+        ICRUD<Car> _carCRUD;
+        public CarController(ICRUD<Car> carCRUD)
         {
             _carCRUD = carCRUD;
         }

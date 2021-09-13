@@ -1,17 +1,13 @@
-﻿using Making_Sense_Project.Logic;
-using Making_Sense_Project.Model;
-using System;
+﻿
+using Making_Sense_Project_API.Logic;
+using Making_Sense_Project_API.Model.Class;
+using Making_Sense_Project_API.Model.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
-namespace Making_Sense_Project_API.Model.Repostory
+namespace Making_Sense_Project_API.Model.Repository
 {
-    public interface ICarCRUD<T> : ICRUD<T> 
-    {
-
-    }
-    public class CarCRUD<T> : ICarCRUD<Car>
+    public class CarCRUD<T> : ICRUD<Car>
     {
         private readonly ReadWriteJsonCar _readWriteJson;
 
@@ -23,7 +19,6 @@ namespace Making_Sense_Project_API.Model.Repostory
         public void Create(Car car)
         {
             string dataJson = _readWriteJson.ReadJsonFile();
-            //se asigna los datos del json a una lista
             List<Car> listCar = _readWriteJson.DesrealizedJson(dataJson);
             listCar.Add(car);
             string serializedJson = _readWriteJson.SerializeJson(listCar);

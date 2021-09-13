@@ -1,11 +1,8 @@
 ﻿using Making_Sense_Project.Model;
 using Making_Sense_Project_API.Model.Repostory;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Making_Sense_Project_API.Controllers
 {
@@ -29,8 +26,8 @@ namespace Making_Sense_Project_API.Controllers
         [HttpGet("All")]
         public IActionResult GetAll()
         {
-            var list = _carCRUD.GetAll();
-            return Ok(list);
+            IList<Car> list = _carCRUD.GetAll();
+            return Ok(list.OrderBy(x => x.IdCar));
         }
 
         [HttpDelete]
@@ -39,8 +36,8 @@ namespace Making_Sense_Project_API.Controllers
             _carCRUD.DeleteById(idCar);
             return Ok();
         }
-        [HttpPut("Create")]
-       public IActionResult Create(Car car)
+        [HttpPost("Create")]
+        public IActionResult Create(Car car)
         {
             _carCRUD.Create(car);
             return Ok();

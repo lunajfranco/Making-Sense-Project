@@ -1,20 +1,15 @@
 ﻿using Making_Sense_Project.Model;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Making_Sense_Project.Logic
 {
     public class ReadWriteJsonCar
     {
-        private string _pathJsonCar;
-            public ReadWriteJsonCar(IConfiguration configuration)
+        private readonly string _pathJsonCar;
+        public ReadWriteJsonCar(IConfiguration configuration)
         {
             _pathJsonCar = configuration.GetValue<string>("MySettings:_PathJsonCar");
         }

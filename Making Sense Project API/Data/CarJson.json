@@ -34,5 +34,14 @@
     "Year": 1996,
     "NumbersDoor": 3,
     "Automatic": false
+  },
+  {
+    "IdCar": 8,
+    "Brand": 2,
+    "Model": "Corsa",
+    "Color": "Black",
+    "Year": 2020,
+    "NumbersDoor": 3,
+    "Automatic": false
   }
 ]

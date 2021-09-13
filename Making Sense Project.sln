@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31321.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Making Sense Project", "Making Sense Project\Making Sense Project.csproj", "{2DFE785A-6D76-4BE5-8162-F35582FA1F6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Making Sense Project API", "Making Sense Project API\Making Sense Project API.csproj", "{92E90F65-FD40-42EF-8AA9-E5FCF044DE46}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MakingSense.RentsCar.Api", "Making Sense Project API\MakingSense.RentsCar.Api.csproj", "{92E90F65-FD40-42EF-8AA9-E5FCF044DE46}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

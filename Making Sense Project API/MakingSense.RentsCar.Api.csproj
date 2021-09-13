@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>Making_Sense_Project_API</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="Data\CarJson.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Data\CarJson.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+  </ItemGroup>
+
+</Project>

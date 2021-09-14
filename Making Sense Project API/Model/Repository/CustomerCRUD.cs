@@ -7,7 +7,11 @@ using System.Linq;
 
 namespace Making_Sense_Project_API.Model.Repository
 {
-    public class CustomerCRUD<T> : ICRUD<Customer>
+    public interface ICustomerCRUD<T> : ICRUD<T>
+    {
+
+    }
+    public class CustomerCRUD<T> : ICustomerCRUD<Customer>
     {
         private readonly ReadWriteJsonCustomer _readWriteJsoncustomer;
 

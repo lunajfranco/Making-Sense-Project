@@ -1,5 +1,5 @@
 ﻿using Making_Sense_Project_API.Model.Class;
-using Making_Sense_Project_API.Model.Interfaces;
+using Making_Sense_Project_API.Model.Repository;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +10,8 @@ namespace Making_Sense_Project_API.Controllers
     [ApiController]
     public class CarController : ControllerBase
     {
-        ICRUD<Car> _carCRUD;
-        public CarController(ICRUD<Car> carCRUD)
+        ICarCRUD<Car> _carCRUD;
+        public CarController(ICarCRUD<Car> carCRUD)
         {
             _carCRUD = carCRUD;
         }
@@ -19,7 +19,15 @@ namespace Making_Sense_Project_API.Controllers
         [HttpGet("byId")]
         public IActionResult Get(int idCar)
         {
-            Car car = _carCRUD.GetById(idCar);
+            Car car;
+            try
+            {
+                car = _carCRUD.GetById(idCar);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
             return Ok(car);
         }
 
@@ -33,19 +41,40 @@ namespace Making_Sense_Project_API.Controllers
         [HttpDelete]
         public IActionResult Delete(int idCar)
         {
-            _carCRUD.DeleteById(idCar);
+            try
+            {
+                _carCRUD.DeleteById(idCar);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
             return Ok();
         }
         [HttpPost("Create")]
         public IActionResult Create(Car car)
         {
-            _carCRUD.Create(car);
+            try
+            {
+                _carCRUD.Create(car);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
             return Ok();
         }
         [HttpPut("Update")]
         public IActionResult Update(Car car)
         {
-            _carCRUD.Update(car);
+            try
+            {
+                _carCRUD.Update(car);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
             return Ok();
         }
 

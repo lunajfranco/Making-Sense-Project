@@ -35,8 +35,8 @@ namespace Making_Sense_Project_API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Making_Sense_Project_API", Version = "v1" });
             });
-            services.AddScoped(typeof(ICRUD<>), typeof(CarCRUD<>));
-            services.AddScoped(typeof(ICRUD<>), typeof(CustomerCRUD<>));
+            services.AddScoped(typeof(ICarCRUD<>), typeof(CarCRUD<>));
+            services.AddScoped(typeof(ICustomerCRUD<>), typeof(CustomerCRUD<>));
             services.AddScoped(typeof(ReadWriteJsonCar));
             services.AddScoped(typeof(ReadWriteJsonCustomer));
         }

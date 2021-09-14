@@ -1,5 +1,5 @@
 ﻿using Making_Sense_Project_API.Model.Class;
-using Making_Sense_Project_API.Model.Interfaces;
+using Making_Sense_Project_API.Model.Repository;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +10,9 @@ namespace Making_Sense_Project_API.Controllers
     [ApiController]
     public class CustomerController : ControllerBase
     {
-        private readonly ICRUD<Customer> _customerCRUD;
+        private readonly ICustomerCRUD<Customer> _customerCRUD;
 
-        public CustomerController(ICRUD<Customer> customerCRUD)
+        public CustomerController(ICustomerCRUD<Customer> customerCRUD)
         {
             _customerCRUD = customerCRUD;
         }
@@ -67,7 +67,7 @@ namespace Making_Sense_Project_API.Controllers
             IList<Customer> listCustomers = _customerCRUD.GetAll();
             return Ok(listCustomers.OrderBy(x => x.DNI));
         }
-        
+
         [HttpDelete("DeleteByDni")]
         public IActionResult Delete(int dni)
         {

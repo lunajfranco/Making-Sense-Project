@@ -1,5 +1,6 @@
-using Making_Sense_Project.Logic;
-using Making_Sense_Project_API.Model.Repostory;
+using Making_Sense_Project_API.Logic;
+using Making_Sense_Project_API.Model.Interfaces;
+using Making_Sense_Project_API.Model.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -35,7 +36,9 @@ namespace Making_Sense_Project_API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Making_Sense_Project_API", Version = "v1" });
             });
             services.AddScoped(typeof(ICarCRUD<>), typeof(CarCRUD<>));
+            services.AddScoped(typeof(ICustomerCRUD<>), typeof(CustomerCRUD<>));
             services.AddScoped(typeof(ReadWriteJsonCar));
+            services.AddScoped(typeof(ReadWriteJsonCustomer));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

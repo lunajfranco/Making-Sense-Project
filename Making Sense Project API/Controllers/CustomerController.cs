@@ -8,75 +8,79 @@ namespace Making_Sense_Project_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CarController : ControllerBase
+    public class CustomerController : ControllerBase
     {
-        ICarCRUD<Car> _carCRUD;
-        public CarController(ICarCRUD<Car> carCRUD)
+        private readonly ICustomerCRUD<Customer> _customerCRUD;
+
+        public CustomerController(ICustomerCRUD<Customer> customerCRUD)
         {
-            _carCRUD = carCRUD;
+            _customerCRUD = customerCRUD;
         }
 
-        [HttpGet("byId")]
-        public IActionResult Get(int idCar)
+        [HttpPost("Create")]
+        public IActionResult Create(Customer customer)
         {
-            Car car;
             try
             {
-                car = _carCRUD.GetById(idCar);
+                _customerCRUD.Create(customer);
+            }
+            catch (System.Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+            return Ok();
+        }
+
+        [HttpPut("Update")]
+        public IActionResult Update(Customer customer)
+        {
+            try
+            {
+                _customerCRUD.Update(customer);
             }
             catch (System.Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-            return Ok(car);
+            return Ok();
         }
 
-        [HttpGet("All")]
+        [HttpGet("GetByDNI")]
+        public IActionResult GetByDni(int dni)
+        {
+            Customer customer;
+            try
+            {
+                customer = _customerCRUD.GetById(dni);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(customer);
+        }
+
+        [HttpGet("GetAll")]
         public IActionResult GetAll()
         {
-            IList<Car> list = _carCRUD.GetAll();
-            return Ok(list.OrderBy(x => x.IdCar));
+            IList<Customer> listCustomers = _customerCRUD.GetAll();
+            return Ok(listCustomers.OrderBy(x => x.DNI));
         }
 
-        [HttpDelete]
-        public IActionResult Delete(int idCar)
+        [HttpDelete("DeleteByDni")]
+        public IActionResult Delete(int dni)
         {
             try
             {
-                _carCRUD.DeleteById(idCar);
+                _customerCRUD.DeleteById(dni);
             }
             catch (System.Exception ex)
             {
-                return BadRequest(ex.Message);
-            }
-            return Ok();
-        }
-        [HttpPost("Create")]
-        public IActionResult Create(Car car)
-        {
-            try
-            {
-                _carCRUD.Create(car);
-            }
-            catch (System.Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            return Ok();
-        }
-        [HttpPut("Update")]
-        public IActionResult Update(Car car)
-        {
-            try
-            {
-                _carCRUD.Update(car);
-            }
-            catch (System.Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            return Ok();
-        }
 
+                return BadRequest(ex.Message);
+            }
+            return Ok();
+        }
     }
 }

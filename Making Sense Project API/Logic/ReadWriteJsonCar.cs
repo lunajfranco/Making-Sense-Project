@@ -1,10 +1,10 @@
-﻿using Making_Sense_Project.Model;
+﻿using Making_Sense_Project_API.Model.Class;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Making_Sense_Project.Logic
+namespace Making_Sense_Project_API.Logic
 {
     public class ReadWriteJsonCar
     {

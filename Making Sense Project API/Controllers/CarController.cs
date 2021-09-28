@@ -1,4 +1,6 @@
-﻿using Making_Sense_Project_API.Model.Class;
+﻿using AutoMapper;
+using Making_Sense_Project_API.Model.Class;
+using Making_Sense_Project_API.Model.Dtos;
 using Making_Sense_Project_API.Model.Repository;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -6,65 +8,94 @@ using System.Linq;
 
 namespace Making_Sense_Project_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/cars")]
     [ApiController]
     public class CarController : ControllerBase
     {
         ICarCRUD<Car> _carCRUD;
-        public CarController(ICarCRUD<Car> carCRUD)
+        private readonly IMapper _mapper;
+
+        public CarController(ICarCRUD<Car> carCRUD, IMapper mapper)
         {
             _carCRUD = carCRUD;
+            _mapper = mapper;
         }
 
         [HttpPost("Create")]
-        public IActionResult Create(Car car)
+        public IActionResult Create(CarDto carDto)
         {
-            if (_carCRUD.GetById(car.IdCar) != null)
+            if (carDto == null)
             {
-                return BadRequest($"Ya existe un auto con id {car.IdCar} creado");
+                return BadRequest(ModelState);
             }
-            _carCRUD.Create(car);
-            return Ok();
+            var car = _mapper.Map<Car>(carDto);
+            if (!_carCRUD.Create(car))
+            {
+                ModelState.AddModelError("", "Algo salio mal");
+                return StatusCode(505, ModelState);
+            }
+            return NoContent();
         }
 
-        [HttpPut("Update")]
-        public IActionResult Update(Car car)
+        [HttpPatch]
+        public IActionResult Update(int carId, CarDto carDto)
         {
-            if (_carCRUD.GetById(car.IdCar) == null)
+            var car = _carCRUD.GetById(carId);
+            if ( car == null)
             {
-                return NotFound($"No se encontro auto con id {car.IdCar} para actualizar");
+                return NotFound($"No se encontro auto con id {nameof(carId)} para actualizar");
             }
-            _carCRUD.Update(car);
-            return Ok();
+            car = _mapper.Map(carDto, car);
+            if (!_carCRUD.Update(car))
+            {
+                ModelState.AddModelError("", "Algo salio mal");
+                return StatusCode(505, ModelState);
+            }
+            return NoContent();
         }
 
-        [HttpDelete]
+        [HttpDelete("Delete")]
         public IActionResult Delete(int idCar)
         {
-            if (_carCRUD.GetById(idCar) == null)
+            var car = _carCRUD.GetById(idCar);
+            if (car == null)
             {
-                return NotFound($"No se encontro auto con id {idCar} para eliminar");
+                return NotFound($"No se encontro auto con id {nameof(idCar)} para eliminar");
             }
-            _carCRUD.DeleteById(idCar);
-            return Ok();
+            if (!_carCRUD.Delete(car))
+            {
+                ModelState.AddModelError("", "Algo salio mal");
+                return StatusCode(505, ModelState);
+            }
+            return NoContent();
         }
 
         [HttpGet("byId")]
         public IActionResult Get(int idCar)
         {
-
-            if (_carCRUD.GetById(idCar) == null)
+            var car = _carCRUD.GetById(idCar);
+            if (car == null)
             {
-                return NotFound($"No se encontro auto con id {idCar} registrado");
+                return NotFound($"No se encontro auto con id {nameof(idCar)} registrado");
             }
-            return Ok(_carCRUD.GetById(idCar));
+            var carDto = _mapper.Map<CarDto>(car);
+            return Ok(carDto);
         }
 
         [HttpGet("All")]
         public IActionResult GetAll()
         {
-            IList<Car> list = _carCRUD.GetAll();
-            return Ok(list.OrderBy(x => x.IdCar));
+            var listCars = _carCRUD.GetAll();
+            if (listCars.Count == 0)
+            {
+                return NotFound();
+            }
+            var listCarsDto = new List<CarDto>();
+            foreach (var item in listCars)
+            {
+                listCarsDto.Add(_mapper.Map<CarDto>(item));
+            }
+            return Ok(listCarsDto);
         }
     }
 }

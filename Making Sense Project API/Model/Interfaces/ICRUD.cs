@@ -8,10 +8,12 @@ namespace Making_Sense_Project_API.Model.Interfaces
 {
     public interface ICRUD<T>
     {
-        void Create(T entity);
-        void Update(T entity);
-        IList<T> GetAll();
+        bool Create(T entity);
+        bool Update(T entity);
+        bool Delete(T entity);
+        ICollection<T> GetAll();
         T GetById(int id);
-        void DeleteById(int id);
+        
+        bool Save();
     }
 }

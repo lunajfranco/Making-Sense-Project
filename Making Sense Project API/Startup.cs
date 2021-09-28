@@ -1,10 +1,12 @@
-using Making_Sense_Project_API.Logic;
+using Making_Sense_Project_API.Data;
+using Making_Sense_Project_API.Mapper;
 using Making_Sense_Project_API.Model.Interfaces;
 using Making_Sense_Project_API.Model.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -38,9 +40,10 @@ namespace Making_Sense_Project_API
             services.AddScoped(typeof(ICarCRUD<>), typeof(CarCRUD<>));
             services.AddScoped(typeof(ICustomerCRUD<>), typeof(CustomerCRUD<>));
             services.AddScoped(typeof(IRentalsCRUD<>), typeof(RentalsCRUD<>));
-            services.AddScoped(typeof(ReadWriteJsonCar));
-            services.AddScoped(typeof(ReadWriteJsonRentals));
-            services.AddScoped(typeof(ReadWriteJsonCustomer));
+            services.AddAutoMapper(typeof(CarMappers));
+            services.AddAutoMapper(typeof(CustomerMappers));
+            services.AddAutoMapper(typeof(RentalsMappers));
+            services.AddDbContext<ApplicationDbContext>(Options => Options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

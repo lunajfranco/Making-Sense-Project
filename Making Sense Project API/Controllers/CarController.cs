@@ -16,19 +16,48 @@ namespace Making_Sense_Project_API.Controllers
             _carCRUD = carCRUD;
         }
 
+        [HttpPost("Create")]
+        public IActionResult Create(Car car)
+        {
+            if (_carCRUD.GetById(car.IdCar) != null)
+            {
+                return BadRequest($"Ya existe un auto con id {car.IdCar} creado");
+            }
+            _carCRUD.Create(car);
+            return Ok();
+        }
+
+        [HttpPut("Update")]
+        public IActionResult Update(Car car)
+        {
+            if (_carCRUD.GetById(car.IdCar) == null)
+            {
+                return NotFound($"No se encontro auto con id {car.IdCar} para actualizar");
+            }
+            _carCRUD.Update(car);
+            return Ok();
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(int idCar)
+        {
+            if (_carCRUD.GetById(idCar) == null)
+            {
+                return NotFound($"No se encontro auto con id {idCar} para eliminar");
+            }
+            _carCRUD.DeleteById(idCar);
+            return Ok();
+        }
+
         [HttpGet("byId")]
         public IActionResult Get(int idCar)
         {
-            Car car;
-            try
+
+            if (_carCRUD.GetById(idCar) == null)
             {
-                car = _carCRUD.GetById(idCar);
+                return NotFound($"No se encontro auto con id {idCar} registrado");
             }
-            catch (System.Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            return Ok(car);
+            return Ok(_carCRUD.GetById(idCar));
         }
 
         [HttpGet("All")]
@@ -37,46 +66,5 @@ namespace Making_Sense_Project_API.Controllers
             IList<Car> list = _carCRUD.GetAll();
             return Ok(list.OrderBy(x => x.IdCar));
         }
-
-        [HttpDelete]
-        public IActionResult Delete(int idCar)
-        {
-            try
-            {
-                _carCRUD.DeleteById(idCar);
-            }
-            catch (System.Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            return Ok();
-        }
-        [HttpPost("Create")]
-        public IActionResult Create(Car car)
-        {
-            try
-            {
-                _carCRUD.Create(car);
-            }
-            catch (System.Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            return Ok();
-        }
-        [HttpPut("Update")]
-        public IActionResult Update(Car car)
-        {
-            try
-            {
-                _carCRUD.Update(car);
-            }
-            catch (System.Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            return Ok();
-        }
-
     }
 }

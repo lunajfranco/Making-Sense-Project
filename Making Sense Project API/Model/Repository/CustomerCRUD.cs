@@ -23,11 +23,6 @@ namespace Making_Sense_Project_API.Model.Repository
         {
             string dataJson = _readWriteJsoncustomer.ReadJsonFile();
             List<Customer> listCustomer = _readWriteJsoncustomer.DesrealizedJson(dataJson);
-            var result = listCustomer.SingleOrDefault(x => x.DNI == customer.DNI);
-            if (result != null)
-            {
-                throw new Exception($"Ya existe usuario con ese DNI {result.DNI}");   
-            }
             listCustomer.Add(customer);
             string SerializedJson = _readWriteJsoncustomer.SerializeJson(listCustomer);
             _readWriteJsoncustomer.WriteJsonFile(SerializedJson);
@@ -37,11 +32,6 @@ namespace Making_Sense_Project_API.Model.Repository
         {
             string dataJson = _readWriteJsoncustomer.ReadJsonFile();
             List<Customer> listCustomer = _readWriteJsoncustomer.DesrealizedJson(dataJson);
-            var result = listCustomer.SingleOrDefault(x => x.DNI == dni);
-            if (result == null)
-            {
-                throw new Exception($"No se encuentra Cliente con DNI:{dni} para eliminar");
-            }
             listCustomer.Remove(listCustomer.SingleOrDefault(x => x.DNI == dni));
             string SerializedJson = _readWriteJsoncustomer.SerializeJson(listCustomer);
             _readWriteJsoncustomer.WriteJsonFile(SerializedJson);
@@ -59,10 +49,6 @@ namespace Making_Sense_Project_API.Model.Repository
             string dataJson = _readWriteJsoncustomer.ReadJsonFile();
             List<Customer> listCustomer = _readWriteJsoncustomer.DesrealizedJson(dataJson);
             Customer customer = listCustomer.SingleOrDefault(x => x.DNI == dni);
-            if (customer == null)
-            {
-                throw new Exception($"No se encuentra Cliente con DNI:{dni} para visualizar");
-            }
             return customer;
         }
 
@@ -70,11 +56,6 @@ namespace Making_Sense_Project_API.Model.Repository
         {
             string dataJson = _readWriteJsoncustomer.ReadJsonFile();
             List<Customer> listCustomer = _readWriteJsoncustomer.DesrealizedJson(dataJson);
-            var result = listCustomer.SingleOrDefault(x => x.DNI == customer.DNI);
-            if (result == null)
-            {
-                throw new Exception("No se encuentra Cliente con ese dni para actualizar");
-            }
             listCustomer.Remove(listCustomer.SingleOrDefault(x => x.DNI == customer.DNI));
             listCustomer.Add(customer);
             string SerializedJson = _readWriteJsoncustomer.SerializeJson(listCustomer);

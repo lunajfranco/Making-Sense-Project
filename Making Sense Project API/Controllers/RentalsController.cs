@@ -30,50 +30,57 @@ namespace Making_Sense_Project_API.Controllers
         {
             if (_carCRUD.GetById(rentals.IdCar) == null)
             {
-                return NotFound();
+                return BadRequest($"No hay auto registrado con id {rentals.IdCar}");
             }
             if (_customerCRUD.GetById(rentals.DniCustomer) == null)
             {
-                return NotFound();
+                return BadRequest($"No hay cliente registrado con id {rentals.DniCustomer}");
+            }
+            if (_rentalsCRUD.GetById(rentals.IdRentals) != null)
+            {
+                return BadRequest($"Ya se encuentra registrada una renta con id {rentals.IdRentals}");
             }
             _rentalsCRUD.Create(rentals);
             return Ok();
         }
+
         [HttpPut("Update")]
         public IActionResult Update(Rentals rentals)
         {
             if (_rentalsCRUD.GetById(rentals.IdRentals) == null)
             {
-                return NotFound();
+                return NotFound($"No se encontro renta con id {rentals.IdRentals} para actualizar");
             }
             _rentalsCRUD.Update(rentals);
             return Ok();
         }
-        [HttpGet("GetById")]
-        public IActionResult GetById(int idRentals)
-        {
-            Rentals rentals = _rentalsCRUD.GetById(idRentals);
-            if ( rentals == null)
-            {
-                return NotFound();
-            }
-            return Ok(rentals);
-        }
-        [HttpGet("GetAll")]
-        public IActionResult GetAll()
-        {
-            IList<Rentals> listRentals = _rentalsCRUD.GetAll();
-            return Ok(listRentals.OrderBy(x => x.IdRentals));
-        }
+
         [HttpDelete("DeleteById")]
         public IActionResult Delete(int idRentals)
         {
             if (_rentalsCRUD.GetById(idRentals) == null)
             {
-                return NotFound();
+                return NotFound($"No se encontro renta con id {idRentals} para eliminar");
             }
             _rentalsCRUD.DeleteById(idRentals);
             return Ok();
+        }
+
+        [HttpGet("GetById")]
+        public IActionResult GetById(int idRentals)
+        {
+            if (_rentalsCRUD.GetById(idRentals) == null)
+            {
+                return NotFound($"No existe renta con id {idRentals} registrado");
+            }
+            return Ok(_rentalsCRUD.GetById(idRentals));
+        }
+
+        [HttpGet("GetAll")]
+        public IActionResult GetAll()
+        {
+            IList<Rentals> listRentals = _rentalsCRUD.GetAll();
+            return Ok(listRentals.OrderBy(x => x.IdRentals));
         }
     } 
 }

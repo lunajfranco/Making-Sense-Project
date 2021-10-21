@@ -20,45 +20,44 @@ namespace Making_Sense_Project_API.Controllers
         [HttpPost("Create")]
         public IActionResult Create(Customer customer)
         {
-            try
+            if (_customerCRUD.GetById(customer.DNI) != null)
             {
-                _customerCRUD.Create(customer);
+                return BadRequest($"Ya existe cliente con dni {customer.DNI}");
             }
-            catch (System.Exception ex)
-            {
-
-                return BadRequest(ex.Message);
-            }
+            _customerCRUD.Create(customer);
             return Ok();
         }
 
         [HttpPut("Update")]
         public IActionResult Update(Customer customer)
         {
-            try
+            if (_customerCRUD.GetById(customer.DNI) == null)
             {
-                _customerCRUD.Update(customer);
+                return NotFound($"No se encontro cliente con dni {customer.DNI} para actualizar");
             }
-            catch (System.Exception ex)
+            _customerCRUD.Update(customer);
+            return Ok();
+        }
+
+        [HttpDelete("DeleteByDni")]
+        public IActionResult Delete(int dni)
+        {
+            if (_customerCRUD.GetById(dni) == null)
             {
-                return BadRequest(ex.Message);
+                return NotFound($"No se encontro cliente con dni {dni} para eliminar");
             }
+            _customerCRUD.DeleteById(dni);
             return Ok();
         }
 
         [HttpGet("GetByDNI")]
         public IActionResult GetByDni(int dni)
         {
-            Customer customer;
-            try
+            if (_customerCRUD.GetById(dni) == null)
             {
-                customer = _customerCRUD.GetById(dni);
+                return NotFound($"No se encontro cliente con dni {dni}");
             }
-            catch (System.Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            return Ok(customer);
+            return Ok(_customerCRUD.GetById(dni));
         }
 
         [HttpGet("GetAll")]
@@ -66,21 +65,6 @@ namespace Making_Sense_Project_API.Controllers
         {
             IList<Customer> listCustomers = _customerCRUD.GetAll();
             return Ok(listCustomers.OrderBy(x => x.DNI));
-        }
-
-        [HttpDelete("DeleteByDni")]
-        public IActionResult Delete(int dni)
-        {
-            try
-            {
-                _customerCRUD.DeleteById(dni);
-            }
-            catch (System.Exception ex)
-            {
-
-                return BadRequest(ex.Message);
-            }
-            return Ok();
         }
     }
 }

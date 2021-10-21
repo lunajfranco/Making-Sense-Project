@@ -1,0 +1,18 @@
+[
+  {
+    "IdRentals": 1,
+    "IdCar": 1,
+    "DniCustomer": 40000000,
+    "DurationRental": "4Days",
+    "StartRentals": "2021-09-15T23:51:43.066Z",
+    "EndRentals": "2021-09-19T23:51:43.066Z"
+  },
+  {
+    "IdRentals": 3,
+    "IdCar": 1,
+    "DniCustomer": 40000000,
+    "DurationRental": "2Days",
+    "StartRentals": "2021-09-15T23:56:12.426Z",
+    "EndRentals": "2021-09-17T23:56:12.426Z"
+  }
+]

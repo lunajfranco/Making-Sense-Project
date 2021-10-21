@@ -37,7 +37,9 @@ namespace Making_Sense_Project_API
             });
             services.AddScoped(typeof(ICarCRUD<>), typeof(CarCRUD<>));
             services.AddScoped(typeof(ICustomerCRUD<>), typeof(CustomerCRUD<>));
+            services.AddScoped(typeof(IRentalsCRUD<>), typeof(RentalsCRUD<>));
             services.AddScoped(typeof(ReadWriteJsonCar));
+            services.AddScoped(typeof(ReadWriteJsonRentals));
             services.AddScoped(typeof(ReadWriteJsonCustomer));
         }
 

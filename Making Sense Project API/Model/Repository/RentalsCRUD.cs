@@ -1,4 +1,4 @@
-﻿using Making_Sense_Project_API.Logic;
+﻿using Making_Sense_Project_API.Data;
 using Making_Sense_Project_API.Model.Class;
 using Making_Sense_Project_API.Model.Interfaces;
 using System;
@@ -14,53 +14,44 @@ namespace Making_Sense_Project_API.Model.Repository
     }
     public class RentalsCRUD<T> : IRentalsCRUD<Rentals>
     {
-        private readonly ReadWriteJsonRentals _readWriteJsonRentals;
+        private readonly ApplicationDbContext _dbContext;
 
-        public RentalsCRUD(ReadWriteJsonRentals readWriteJsonRentals)
+        public RentalsCRUD(ApplicationDbContext dbContext)
         {
-            _readWriteJsonRentals = readWriteJsonRentals;
-        }
-        public void Create(Rentals rentals)
-        {
-            string dataJson = _readWriteJsonRentals.ReadJsonFile();
-            List<Rentals> listRentals = _readWriteJsonRentals.DesrealizedJson(dataJson);
-            listRentals.Add(rentals);
-            string serializedJson = _readWriteJsonRentals.SerializeJson(listRentals);
-            _readWriteJsonRentals.WriteJsonFile(serializedJson);
+            _dbContext = dbContext;
         }
 
-        public void DeleteById(int id)
+        public bool Create(Rentals rentals)
         {
-            string dataJson = _readWriteJsonRentals.ReadJsonFile();
-            List<Rentals> listRentals = _readWriteJsonRentals.DesrealizedJson(dataJson);
-            listRentals.Remove(listRentals.SingleOrDefault(x => x.IdRentals == id));
-            string serializedJson = _readWriteJsonRentals.SerializeJson(listRentals);
-            _readWriteJsonRentals.WriteJsonFile(serializedJson);
+            _dbContext.Rentals.Add(rentals);
+            return Save();
         }
 
-        public IList<Rentals> GetAll()
+        public bool Delete(Rentals rentals)
         {
-            string dataJson = _readWriteJsonRentals.ReadJsonFile();
-            IList<Rentals> listRentals = _readWriteJsonRentals.DesrealizedJson(dataJson);
-            return listRentals;
+            _dbContext.Rentals.Remove(rentals);
+            return Save();
+        }
+
+        public bool Update(Rentals rentals)
+        {
+            _dbContext.Rentals.Update(rentals);
+            return Save();
+        }
+
+        public ICollection<Rentals> GetAll()
+        {
+            return _dbContext.Rentals.OrderBy(r => r.IdRentals).ToList();
         }
 
         public Rentals GetById(int id)
         {
-            string dataJson = _readWriteJsonRentals.ReadJsonFile();
-            List<Rentals> listRentals = _readWriteJsonRentals.DesrealizedJson(dataJson);
-            Rentals rentals = listRentals.SingleOrDefault(x => x.IdRentals == id);
-            return rentals;
+            return _dbContext.Rentals.FirstOrDefault(r => r.IdRentals == id);
         }
 
-        public void Update(Rentals rentals)
+        public bool Save()
         {
-            string dataJson = _readWriteJsonRentals.ReadJsonFile();
-            List<Rentals> listRentals = _readWriteJsonRentals.DesrealizedJson(dataJson);
-            listRentals.Remove(listRentals.SingleOrDefault(x => x.IdRentals == rentals.IdRentals));
-            listRentals.Add(rentals);
-            string serializedJson = _readWriteJsonRentals.SerializeJson(listRentals);
-            _readWriteJsonRentals.WriteJsonFile(serializedJson);
+            return _dbContext.SaveChanges() >= 0 ? true : false;
         }
     }
 }

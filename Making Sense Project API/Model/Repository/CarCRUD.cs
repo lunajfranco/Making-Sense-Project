@@ -1,5 +1,5 @@
 ﻿
-using Making_Sense_Project_API.Logic;
+using Making_Sense_Project_API.Data;
 using Making_Sense_Project_API.Model.Class;
 using Making_Sense_Project_API.Model.Interfaces;
 using System;
@@ -14,53 +14,44 @@ namespace Making_Sense_Project_API.Model.Repository
     }
     public class CarCRUD<T> : ICarCRUD<Car>
     {
-        private readonly ReadWriteJsonCar _readWriteJson;
+        private readonly ApplicationDbContext _dbContext;
 
-        public CarCRUD(ReadWriteJsonCar readWriteJson)
+        public CarCRUD(ApplicationDbContext dbcontext)
         {
-            _readWriteJson = readWriteJson;
+            _dbContext = dbcontext;
         }
 
-        public void Create(Car car)
+        public bool Create(Car car)
         {
-            string dataJson = _readWriteJson.ReadJsonFile();
-            List<Car> listCar = _readWriteJson.DesrealizedJson(dataJson);
-            listCar.Add(car);
-            string serializedJson = _readWriteJson.SerializeJson(listCar);
-            _readWriteJson.WriteJsonFile(serializedJson);
+            _dbContext.Cars.Add(car);
+            return Save();
         }
 
-        public void DeleteById(int idCar)
+        public bool Delete(Car car)
         {
-            string dataJson = _readWriteJson.ReadJsonFile();
-            List<Car> listCar = _readWriteJson.DesrealizedJson(dataJson);
-            listCar.Remove(listCar.SingleOrDefault(x => x.IdCar == idCar));
-            string serializedJson = _readWriteJson.SerializeJson(listCar);
-            _readWriteJson.WriteJsonFile(serializedJson);
+            _dbContext.Cars.Remove(car);
+            return Save();
         }
 
-        public IList<Car> GetAll()
+        public bool Update(Car car)
         {
-            string dataJson = _readWriteJson.ReadJsonFile();
-            List<Car> listCar = _readWriteJson.DesrealizedJson(dataJson);
-            return listCar;
+            _dbContext.Update(car);
+            return Save();
+        }
+
+        public ICollection<Car> GetAll()
+        {
+            return _dbContext.Cars.OrderBy(c => c.IdCar).ToList();
         }
 
         public Car GetById(int idCar)
         {
-            string dataJson = _readWriteJson.ReadJsonFile();
-            List<Car> listCar = _readWriteJson.DesrealizedJson(dataJson);
-            Car car = listCar.SingleOrDefault(x => x.IdCar == idCar);
-            return car;
+            return _dbContext.Cars.FirstOrDefault(c => c.IdCar == idCar);
         }
-        public void Update(Car car)
+
+        public bool Save()
         {
-            string dataJson = _readWriteJson.ReadJsonFile();
-            List<Car> listCar = _readWriteJson.DesrealizedJson(dataJson);
-            listCar.Remove(listCar.SingleOrDefault(x => x.IdCar == car.IdCar));
-            listCar.Add(car);
-            string serializedJson = _readWriteJson.SerializeJson(listCar);
-            _readWriteJson.WriteJsonFile(serializedJson);
+            return _dbContext.SaveChanges() >= 0 ? true : false;
         }
     }
 }

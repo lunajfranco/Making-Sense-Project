@@ -1,4 +1,6 @@
-﻿using Making_Sense_Project_API.Model.Class;
+﻿using AutoMapper;
+using Making_Sense_Project_API.Model.Class;
+using Making_Sense_Project_API.Model.Dtos;
 using Making_Sense_Project_API.Model.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,71 +18,101 @@ namespace Making_Sense_Project_API.Controllers
         private readonly IRentalsCRUD<Rentals> _rentalsCRUD;
         private readonly ICarCRUD<Car> _carCRUD;
         private readonly ICustomerCRUD<Customer> _customerCRUD;
+        private readonly IMapper _mapper;
 
         public RentalsController(IRentalsCRUD<Rentals> rentalsCRUD,
-            ICarCRUD<Car> carCRUD, ICustomerCRUD<Customer> customerCRUD)
+            ICarCRUD<Car> carCRUD, ICustomerCRUD<Customer> customerCRUD,
+            IMapper mapper)
         {
             _rentalsCRUD = rentalsCRUD;
             _carCRUD = carCRUD;
             _customerCRUD = customerCRUD;
+            _mapper = mapper;
         }
 
         [HttpPost("Create")]
-        public IActionResult Create(Rentals rentals)
+        public IActionResult Create(RentalsDto rentalsDto)
         {
-            if (_carCRUD.GetById(rentals.IdCar) == null)
+            if (rentalsDto == null)
             {
-                return BadRequest($"No hay auto registrado con id {rentals.IdCar}");
+                return BadRequest(ModelState);
             }
-            if (_customerCRUD.GetById(rentals.DniCustomer) == null)
+            if (_carCRUD.GetById(rentalsDto.IdCar) == null)
             {
-                return BadRequest($"No hay cliente registrado con id {rentals.DniCustomer}");
+                return NotFound($"No se registro ningun auto con id {nameof(rentalsDto.IdCar)} registrado");
             }
-            if (_rentalsCRUD.GetById(rentals.IdRentals) != null)
+            if (_customerCRUD.GetById(rentalsDto.DniCustomer) == null)
             {
-                return BadRequest($"Ya se encuentra registrada una renta con id {rentals.IdRentals}");
+                return NotFound($"No se registro ningun cliente con id {nameof(rentalsDto.DniCustomer)} registrado");
             }
-            _rentalsCRUD.Create(rentals);
-            return Ok();
+            var rentals = _mapper.Map<Rentals>(rentalsDto);
+            if (!_rentalsCRUD.Create(rentals))
+            {
+                ModelState.AddModelError("", "Algo salio mal");
+                return StatusCode(505, ModelState);
+            }
+            return NoContent();
         }
 
         [HttpPut("Update")]
-        public IActionResult Update(Rentals rentals)
+        public IActionResult Update(int idRentals, RentalsDto rentalsDto)
         {
-            if (_rentalsCRUD.GetById(rentals.IdRentals) == null)
+            var rental = _rentalsCRUD.GetById(idRentals);
+            if (rental == null)
             {
-                return NotFound($"No se encontro renta con id {rentals.IdRentals} para actualizar");
+                return NotFound($"No se encontro renta con id {nameof(idRentals)} para actualizar");
             }
-            _rentalsCRUD.Update(rentals);
-            return Ok();
+            rental = _mapper.Map(rentalsDto, rental);
+            if (!_rentalsCRUD.Update(rental))
+            {
+                ModelState.AddModelError("", "Algo salio mal");
+                return StatusCode(505, ModelState);
+            }
+            return NoContent();
         }
 
         [HttpDelete("DeleteById")]
         public IActionResult Delete(int idRentals)
         {
-            if (_rentalsCRUD.GetById(idRentals) == null)
+            var rental = _rentalsCRUD.GetById(idRentals);
+            if (rental == null)
             {
-                return NotFound($"No se encontro renta con id {idRentals} para eliminar");
+                return NotFound($"No se encontro renta con id {nameof(idRentals)} para eliminar");
             }
-            _rentalsCRUD.DeleteById(idRentals);
-            return Ok();
+            if (!_rentalsCRUD.Delete(rental))
+            {
+                ModelState.AddModelError("", "Algo salio mal");
+                return StatusCode(505, ModelState);
+            }
+            return NoContent();
         }
 
         [HttpGet("GetById")]
         public IActionResult GetById(int idRentals)
         {
-            if (_rentalsCRUD.GetById(idRentals) == null)
+            var rental = _rentalsCRUD.GetById(idRentals);
+            if (rental == null)
             {
-                return NotFound($"No existe renta con id {idRentals} registrado");
+                return NotFound($"No existe renta con id {nameof(idRentals)} registrado");
             }
-            return Ok(_rentalsCRUD.GetById(idRentals));
+            var rentalDto = _mapper.Map<RentalsDto>(rental);
+            return Ok(rentalDto);
         }
 
         [HttpGet("GetAll")]
         public IActionResult GetAll()
         {
-            IList<Rentals> listRentals = _rentalsCRUD.GetAll();
-            return Ok(listRentals.OrderBy(x => x.IdRentals));
+            var lisRentals = _rentalsCRUD.GetAll();
+            if (lisRentals.Count == 0)
+            {
+                return NotFound();
+            }
+            var listRentalsDto = new List<RentalsDto>();
+            foreach (var item in lisRentals)
+            {
+                listRentalsDto.Add(_mapper.Map<RentalsDto>(item));
+            }
+            return Ok(listRentalsDto);
         }
     } 
 }

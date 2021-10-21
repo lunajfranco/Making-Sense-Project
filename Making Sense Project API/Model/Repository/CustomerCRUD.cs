@@ -1,4 +1,4 @@
-﻿using Making_Sense_Project_API.Logic;
+﻿using Making_Sense_Project_API.Data;
 using Making_Sense_Project_API.Model.Class;
 using Making_Sense_Project_API.Model.Interfaces;
 using System;
@@ -13,53 +13,43 @@ namespace Making_Sense_Project_API.Model.Repository
     }
     public class CustomerCRUD<T> : ICustomerCRUD<Customer>
     {
-        private readonly ReadWriteJsonCustomer _readWriteJsoncustomer;
+        private readonly ApplicationDbContext _dbContext;
 
-        public CustomerCRUD(ReadWriteJsonCustomer readWriteJsoncustomer)
+        public CustomerCRUD(ApplicationDbContext dbContext)
         {
-            _readWriteJsoncustomer = readWriteJsoncustomer;
-        }
-        public void Create(Customer customer)
-        {
-            string dataJson = _readWriteJsoncustomer.ReadJsonFile();
-            List<Customer> listCustomer = _readWriteJsoncustomer.DesrealizedJson(dataJson);
-            listCustomer.Add(customer);
-            string SerializedJson = _readWriteJsoncustomer.SerializeJson(listCustomer);
-            _readWriteJsoncustomer.WriteJsonFile(SerializedJson);
+            _dbContext = dbContext;
         }
 
-        public void DeleteById(int dni)
+        public bool Create(Customer customer)
         {
-            string dataJson = _readWriteJsoncustomer.ReadJsonFile();
-            List<Customer> listCustomer = _readWriteJsoncustomer.DesrealizedJson(dataJson);
-            listCustomer.Remove(listCustomer.SingleOrDefault(x => x.DNI == dni));
-            string SerializedJson = _readWriteJsoncustomer.SerializeJson(listCustomer);
-            _readWriteJsoncustomer.WriteJsonFile(SerializedJson);
+            _dbContext.Customers.Add(customer);
+            return Save();
         }
 
-        public IList<Customer> GetAll()
+        public bool Delete(Customer customer)
         {
-            string dataJson = _readWriteJsoncustomer.ReadJsonFile();
-            List<Customer> listCustomer = _readWriteJsoncustomer.DesrealizedJson(dataJson);
-            return listCustomer;
+            _dbContext.Customers.Remove(customer);
+            return Save();
+        }
+        public bool Update(Customer customer)
+        {
+            _dbContext.Customers.Update(customer);
+            return Save();
+        }
+
+        public ICollection<Customer> GetAll()
+        {
+            return _dbContext.Customers.OrderBy(c => c.DNI).ToList();
         }
 
         public Customer GetById(int dni)
         {
-            string dataJson = _readWriteJsoncustomer.ReadJsonFile();
-            List<Customer> listCustomer = _readWriteJsoncustomer.DesrealizedJson(dataJson);
-            Customer customer = listCustomer.SingleOrDefault(x => x.DNI == dni);
-            return customer;
+            return _dbContext.Customers.FirstOrDefault(c => c.DNI == dni);
         }
 
-        public void Update(Customer customer)
+        public bool Save()
         {
-            string dataJson = _readWriteJsoncustomer.ReadJsonFile();
-            List<Customer> listCustomer = _readWriteJsoncustomer.DesrealizedJson(dataJson);
-            listCustomer.Remove(listCustomer.SingleOrDefault(x => x.DNI == customer.DNI));
-            listCustomer.Add(customer);
-            string SerializedJson = _readWriteJsoncustomer.SerializeJson(listCustomer);
-            _readWriteJsoncustomer.WriteJsonFile(SerializedJson);
+            return _dbContext.SaveChanges() >= 0 ? true : false;
         }
     }
 }

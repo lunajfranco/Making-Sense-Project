@@ -1,4 +1,6 @@
-﻿using Making_Sense_Project_API.Model.Class;
+﻿using AutoMapper;
+using Making_Sense_Project_API.Model.Class;
+using Making_Sense_Project_API.Model.Dtos;
 using Making_Sense_Project_API.Model.Repository;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -11,32 +13,45 @@ namespace Making_Sense_Project_API.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerCRUD<Customer> _customerCRUD;
+        private readonly IMapper _mapper;
 
-        public CustomerController(ICustomerCRUD<Customer> customerCRUD)
+        public CustomerController(ICustomerCRUD<Customer> customerCRUD, IMapper mapper)
         {
             _customerCRUD = customerCRUD;
+            _mapper = mapper;
         }
 
         [HttpPost("Create")]
-        public IActionResult Create(Customer customer)
+        public IActionResult Create(CustomerDto customerDto)
         {
-            if (_customerCRUD.GetById(customer.DNI) != null)
+            if (_customerCRUD.GetById(customerDto.DNI) != null)
             {
-                return BadRequest($"Ya existe cliente con dni {customer.DNI}");
+                return BadRequest($"Ya existe cliente con dni {nameof(customerDto.DNI)}");
             }
-            _customerCRUD.Create(customer);
-            return Ok();
+            var customer = _mapper.Map<Customer>(customerDto);
+            if (!_customerCRUD.Create(customer))
+            {
+                ModelState.AddModelError("", "Algo salio mal");
+                return StatusCode(505, ModelState);
+            }
+            return NoContent();
         }
 
         [HttpPut("Update")]
-        public IActionResult Update(Customer customer)
+        public IActionResult Update(int dni, CustomerDto customerDto)
         {
-            if (_customerCRUD.GetById(customer.DNI) == null)
+            var customer = _customerCRUD.GetById(dni);
+            if (customer == null)
             {
-                return NotFound($"No se encontro cliente con dni {customer.DNI} para actualizar");
+                return NotFound($"No se encontro cliente con dni {nameof(dni)} para actualizar");
             }
-            _customerCRUD.Update(customer);
-            return Ok();
+            customer = _mapper.Map(customerDto, customer);
+            if (!_customerCRUD.Update(customer))
+            {
+                ModelState.AddModelError("", "Algo salio mal");
+                return StatusCode(505, ModelState);
+            }
+            return NoContent();
         }
 
         [HttpDelete("DeleteByDni")]
@@ -44,27 +59,44 @@ namespace Making_Sense_Project_API.Controllers
         {
             if (_customerCRUD.GetById(dni) == null)
             {
-                return NotFound($"No se encontro cliente con dni {dni} para eliminar");
+                return NotFound($"No se encontro cliente con dni {nameof(dni)} para eliminar");
             }
-            _customerCRUD.DeleteById(dni);
-            return Ok();
+            if (!_customerCRUD.Delete(_customerCRUD.GetById(dni)))
+            {
+                ModelState.AddModelError("", "Algo salio mal");
+                return StatusCode(505, ModelState);
+            }
+            return NoContent();
         }
 
         [HttpGet("GetByDNI")]
         public IActionResult GetByDni(int dni)
         {
-            if (_customerCRUD.GetById(dni) == null)
+            var customer = _customerCRUD.GetById(dni);
+            if (customer == null)
             {
-                return NotFound($"No se encontro cliente con dni {dni}");
+                return NotFound($"No se encontro cliente con dni {nameof(dni)}");
             }
-            return Ok(_customerCRUD.GetById(dni));
+            var customerDto = _mapper.Map<CustomerDto>(customer);
+            return Ok(customerDto);
         }
 
         [HttpGet("GetAll")]
         public IActionResult GetAll()
         {
-            IList<Customer> listCustomers = _customerCRUD.GetAll();
-            return Ok(listCustomers.OrderBy(x => x.DNI));
+            var listCustomer = _customerCRUD.GetAll();
+            if (listCustomer.Count == 0)
+            {
+                return NotFound();
+            }
+            var listCustomerDtos = new List<CustomerDto>();
+
+            foreach (var item in listCustomer)
+            {
+                listCustomerDtos.Add(_mapper.Map<CustomerDto>(item));
+            }
+
+            return Ok(listCustomerDtos);
         }
     }
 }
